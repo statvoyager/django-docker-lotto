@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Lotto 추첨</title>
+</head>
+<body>
+    <h1>관리자 추첨 기능</h1>
+
+    <p>회차를 입력하면 1부터 45까지의 번호 중 6개가 당첨 번호로 생성됩니다.</p>
+
+    {% if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+
+    {% if draw %}
+        <h2>추첨 완료</h2>
+        <p>회차: {{ draw.round_number }}회차</p>
+        <p>당첨 번호: {{ draw.numbers }}</p>
+    {% endif %}
+
+    <hr>
+
+    <h2>새 추첨 진행</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <p>
+            <label>회차:</label>
+            <input type="number" name="round_number" value="1" min="1">
+        </p>
+
+        <p>
+            <button type="submit">추첨하기</button>
+        </p>
+    </form>
+
+    <hr>
+
+    <h2>추첨 내역</h2>
+
+    {% if draws %}
+        <table border="1">
+            <tr>
+                <th>회차</th>
+                <th>당첨 번호</th>
+                <th>추첨 시간</th>
+            </tr>
+
+            {% for item in draws %}
+                <tr>
+                    <td>{{ item.round_number }}회차</td>
+                    <td>{{ item.numbers }}</td>
+                    <td>{{ item.created_at }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>아직 추첨 내역이 없습니다.</p>
+    {% endif %}
+
+    <p>
+        <a href="{% url 'lotto:index' %}">메인으로 돌아가기</a>
+    </p>
+</body>
+</html>

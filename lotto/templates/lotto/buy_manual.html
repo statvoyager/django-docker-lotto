@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>수동 번호 구매</title>
+</head>
+<body>
+    <h1>수동 번호로 복권 구매하기</h1>
+
+    <p>1부터 45까지의 번호 중 6개를 선택하세요.</p>
+
+    {% if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+
+    {% if ticket %}
+        <h2>구매 완료</h2>
+        <p>구매자: {{ ticket.buyer_name }}</p>
+        <p>회차: {{ ticket.round_number }}회차</p>
+        <p>구매 방식: 수동</p>
+        <p>구매 번호: {{ ticket.numbers }}</p>
+
+        <p>
+            <a href="{% url 'lotto:index' %}">메인으로 돌아가기</a>
+        </p>
+    {% else %}
+        <form method="post">
+            {% csrf_token %}
+
+            <p>
+                <label>구매자 이름:</label>
+                <input type="text" name="buyer_name">
+            </p>
+
+            <p>
+                <label>회차:</label>
+                <input type="number" name="round_number" value="1" min="1">
+            </p>
+
+            <h3>번호 선택</h3>
+
+            {% for number in number_range %}
+                <label>
+                    <input type="checkbox" name="numbers" value="{{ number }}">
+                    {{ number }}
+                </label>
+
+                {% if number|divisibleby:9 %}
+                    <br>
+                {% endif %}
+            {% endfor %}
+
+            <p>
+                <button type="submit">수동 번호 구매</button>
+            </p>
+        </form>
+
+        <p>
+            <a href="{% url 'lotto:index' %}">메인으로 돌아가기</a>
+        </p>
+    {% endif %}
+</body>
+</html>

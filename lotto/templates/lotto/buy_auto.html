@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>자동 번호 구매</title>
+</head>
+<body>
+    <h1>자동 번호로 복권 구매하기</h1>
+
+    <p>구매자 이름과 회차를 입력하면 1부터 45까지의 번호 중 6개가 자동으로 생성됩니다.</p>
+
+    {% if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+
+    {% if ticket %}
+        <h2>구매 완료</h2>
+        <p>구매자: {{ ticket.buyer_name }}</p>
+        <p>회차: {{ ticket.round_number }}회차</p>
+        <p>구매 방식: 자동</p>
+        <p>구매 번호: {{ ticket.numbers }}</p>
+
+        <p>
+            <a href="{% url 'lotto:buy_auto' %}">자동 번호 한 번 더 구매하기</a>
+        </p>
+
+        <p>
+            <a href="{% url 'lotto:index' %}">메인으로 돌아가기</a>
+        </p>
+    {% else %}
+        <form method="post">
+            {% csrf_token %}
+
+            <p>
+                <label>구매자 이름:</label>
+                <input type="text" name="buyer_name">
+            </p>
+
+            <p>
+                <label>회차:</label>
+                <input type="number" name="round_number" value="1" min="1">
+            </p>
+
+            <p>
+                <button type="submit">자동 번호 구매</button>
+            </p>
+        </form>
+
+        <p>
+            <a href="{% url 'lotto:index' %}">메인으로 돌아가기</a>
+        </p>
+    {% endif %}
+</body>
+</html>

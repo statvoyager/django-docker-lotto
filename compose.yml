@@ -1,0 +1,27 @@
+services:
+  web:
+    build: .
+    container_name: lotto_web
+    ports:
+      - "8000:8000"
+    environment:
+      POSTGRES_DB: lotto_db
+      POSTGRES_USER: lotto_user
+      POSTGRES_PASSWORD: lotto_password
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16
+    container_name: lotto_db
+    environment:
+      POSTGRES_DB: lotto_db
+      POSTGRES_USER: lotto_user
+      POSTGRES_PASSWORD: lotto_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
